@@ -1,19 +1,18 @@
-let socket = new WebSocket(
-  'wss://javascript.info/article/websocket/demo/hello'
-);
+let socket = new WebSocket('wss://javascript.info/article/websocket/chat/ws');
 
-console.log(socket);
+// отправка сообщения из формы
+document.forms.publish.onsubmit = function() {
+  let outgoingMessage = this.message.value;
 
-socket.onopen = function(e) {
-  console.log('[open] Соединение установлено');
-  console.log('Отправляем данные на сервер');
-  socket.send('Bubble');
+  socket.send(outgoingMessage);
+  return false;
 };
 
+// получение сообщения - отобразить данные в div#messages
 socket.onmessage = function(event) {
-  console.log(`[message] Данные получены с сервера: ${event.data}`);
-};
+  let message = event.data;
 
-socket.onclose = function(error) {
-  console.log(error);
+  let messageElem = document.createElement('div');
+  messageElem.textContent = message;
+  document.getElementById('messages').prepend(messageElem);
 };
